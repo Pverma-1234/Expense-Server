@@ -1,7 +1,7 @@
 const users = require('../dao/userDb');
 
 const authController = {
-    login: (req, res) => {
+    login: async(req, res) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
@@ -10,8 +10,8 @@ const authController = {
             });
         }
 
-        const user = users.find(user => user.email === email && user.password === password);
-        if (user) {
+        const user = await userDao.findByEmail(email);
+        if (user && user.password === password) {
             return res.status(200).json({
                 message: 'User Authenticated',
                 user: { id: user.id, name: user.name, email: user.email }
