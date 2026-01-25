@@ -78,7 +78,7 @@ Expense-App
 
 ```json
 {
-  "email": "john@gmail.com",
+  "email": "prince@gmail.com",
   "password": "123456"
 }
 ```
