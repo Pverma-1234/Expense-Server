@@ -1,56 +1,95 @@
-const users = require('../dao/userDb');
+const userDao = require('../dao/userDao');
+const bcrypt = require('bcryptjs');
 
 const authController = {
-    login: async(req, res) => {
-        const { email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({
-                message: 'Email and Password are required!!'
-            });
-        }
+    // ================= LOGIN =================
+    login: async (req, res) => {
+        try {
+            const { email, password } = req.body;
 
-        const user = await userDao.findByEmail(email);
-        if (user && user.password === password) {
+            if (!email || !password) {
+                return res.status(400).json({
+                    message: 'Email and Password are required'
+                });
+            }
+
+            const user = await userDao.findByEmail(email);
+
+            // user exist check (MOST IMPORTANT)
+            if (!user) {
+                return res.status(400).json({
+                    message: 'Invalid email or password'
+                });
+            }
+
+            const isPasswordMatched = await bcrypt.compare(
+                password,
+                user.password
+            );
+
+            if (!isPasswordMatched) {
+                return res.status(400).json({
+                    message: 'Invalid email or password'
+                });
+            }
+
             return res.status(200).json({
                 message: 'User Authenticated',
-                user: { id: user.id, name: user.name, email: user.email }
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email
+                }
             });
-        } else {
-            return res.status(400).json({
-                message: 'Invalid email or password'
+
+        } catch (error) {
+            console.error('Login Error:', error);
+            return res.status(500).json({
+                message: 'Internal Server Error'
             });
         }
     },
-    register: (req, res) => {
-        const { name, email, password } = req.body;
 
-        if (!name || !email || !password) {
-            return res.status(400).json({
-                message: 'Name, Email, Password are required!!'
+    // ================= REGISTER =================
+    register: async (req, res) => {
+        try {
+            const { name, email, password } = req.body;
+
+            if (!name || !email || !password) {
+                return res.status(400).json({
+                    message: 'Name, Email and Password are required'
+                });
+            }
+
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            const user = await userDao.create({
+                name: name,
+                email: email,
+                password: hashedPassword
+            });
+
+            return res.status(201).json({
+                message: 'User registered successfully',
+                user: {
+                    id: user._id
+                }
+            });
+
+        } catch (error) {
+            if (error.code === 'USER_EXIST') {
+                return res.status(400).json({
+                    message: 'User with this email already exists'
+                });
+            }
+
+            console.error('Register Error:', error);
+            return res.status(500).json({
+                message: 'Internal Server Error'
             });
         }
-
-        const user = users.find(user => user.email === email);
-        if (user) {
-            return res.status(400).json({
-                message: `User with this email already exists: ${email}`
-            });
-        }
-
-        const newUser = {
-            id: users.length + 1,
-            name: name,
-            email: email,
-            password: password
-        };
-
-        users.push(newUser);
-
-        return res.status(200).json({
-            message: 'User registered',
-            user: { id: newUser.id }
-        });
     }
 };
 
