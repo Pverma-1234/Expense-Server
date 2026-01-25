@@ -86,12 +86,12 @@ POST /auth/login
 ```
 ⚙️ Environment Variables
 Create a .env file in the root directory:
-
 env
 ```
 MONGO_DB_CONNECTION_URI=mongodb://127.0.0.1:27017/Expense-App
 ```
-▶️ How to Run the Project
+▶️ How to Run the Project  
+
 1️⃣ Clone the repository
 
 
@@ -117,6 +117,7 @@ arduino
 ```
 http://localhost:5001
 ```
+
 ## 🧠 Learning Outcomes
 
 - Understanding **MERN project structure**
