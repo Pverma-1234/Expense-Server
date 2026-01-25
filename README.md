@@ -1,126 +1,121 @@
 # Expense-Server
 Backend server for an expense tracking application built with Node.js and Express
-💸 Expense App (MERN Stack)
+# 💸 Expense App (MERN Stack)
 
-An Expense Management Application built while learning the MERN Stack.
-This project helps users register, login, and manage expenses efficiently while practicing real-world backend and frontend concepts.
+An **Expense Management Application** built while learning the **MERN Stack**.  
+This project helps users **register, login, and manage expenses** efficiently while practicing real-world backend and frontend concepts.
 
-🚀 Features
+---
 
-🔐 User Authentication (Register & Login)
+## 🚀 Features
 
-🔑 Secure password hashing using bcrypt
+- 🔐 User Authentication (Register & Login)
+- 🔑 Secure password hashing using **bcrypt**
+- 🗄️ MongoDB database integration
+- 📦 RESTful APIs using **Express & Node.js**
+- 🧱 Clean MVC-based project structure
+- 🌱 Environment variable support with **dotenv**
+- 🧪 API tested using **Postman**
 
-🗄️ MongoDB database integration
+---
 
-📦 RESTful APIs using Express & Node.js
+## 🛠️ Tech Stack
 
-🧱 Clean MVC-based project structure
+### Frontend (Coming Soon)
+- React.js
+- Axios
+- CSS / Tailwind (planned)
 
-🌱 Environment variable support with dotenv
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- bcryptjs
 
-🧪 API tested using Postman
+### Tools
+- Git & GitHub
+- Postman
+- MongoDB Compass
+- VS Code
 
-🛠️ Tech Stack
-Frontend (Coming Soon)
+---
 
-React.js
-
-Axios
-
-CSS / Tailwind (planned)
-
-Backend
-
-Node.js
-
-Express.js
-
-MongoDB
-
-Mongoose
-
-bcryptjs
-
-Tools
-
-Git & GitHub
-
-Postman
-
-MongoDB Compass
-
-📁 Project Structure
+## 📁 Project Structure
+```
 Expense-App
 └── Expense-Server
-    ├── src
-    │   ├── controllers
-    │   │   └── authController.js
-    │   ├── dao
-    │   │   └── userDao.js
-    │   ├── model
-    │   │   └── user.js
-    │   └── routes
-    │       └── authRoutes.js
-    ├── .env
-    ├── server.js
-    ├── package.json
-    └── README.md
+├── src
+│ ├── controllers
+│ │ └── authController.js
+│ ├── dao
+│ │ └── userDao.js
+│ ├── model
+│ │ └── user.js
+│ └── routes
+│ └── authRoutes.js
+├── .env
+├── server.js
+├── package.json
+└── README.md
 
-🔐 Authentication APIs
-▶ Register User
+```
 
-POST /auth/register
 
+
+## 🔐 Authentication APIs
+
+### ▶ Register User
+**POST** `/auth/register`
+
+```json
 {
   "name": "John Doe",
   "email": "john@gmail.com",
   "password": "123456"
 }
-
 ▶ Login User
-
 POST /auth/login
 
+json
+Copy code
 {
   "email": "john@gmail.com",
   "password": "123456"
 }
-
 ⚙️ Environment Variables
-
 Create a .env file in the root directory:
 
+env
+Copy code
 MONGO_DB_CONNECTION_URI=mongodb://127.0.0.1:27017/Expense-App
-
 ▶️ How to Run the Project
-
 1️⃣ Clone the repository
 
+bash
+Copy code
 git clone https://github.com/USERNAME/REPO_NAME.git
+2️⃣ Navigate to backend folder
 
-
-2️⃣ Go to backend folder
-
+bash
+Copy code
 cd Expense-Server
-
-
 3️⃣ Install dependencies
 
+bash
+Copy code
 npm install
-
-
 4️⃣ Start the server
 
+bash
+Copy code
 npm start
-
-
 Server will run on:
 
+arduino
+Copy code
 http://localhost:5001
-
 🧠 Learning Outcomes
-
 Understanding MERN project structure
 
 Implementing authentication logic
@@ -132,7 +127,6 @@ Working with MongoDB & Mongoose
 Writing clean and reusable backend code
 
 🔮 Future Enhancements
-
 ➕ Add expense CRUD operations
 
 📊 Expense analytics & charts
@@ -143,13 +137,7 @@ Writing clean and reusable backend code
 
 📱 Responsive UI
 
-🤝 Contributing
-
-This project is created for learning purposes.
-Suggestions and improvements are always welcome 😊
-
 👨‍💻 Author
-
 Prince Verma
 📌 Learning MERN Stack through real-world projects
 
