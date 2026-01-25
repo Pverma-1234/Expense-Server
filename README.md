@@ -70,44 +70,44 @@ Expense-App
 
 ```json
 {
-  "name": "John Doe",
-  "email": "john@gmail.com",
+  "name": "prince",
+  "email": "prince@gmail.com",
   "password": "123456"
 }
 ```
-▶ Login User
-POST /auth/login
+### ▶ Login User
+**POST** `/auth/login`
 
-```
+```json
 {
   "email": "john@gmail.com",
   "password": "123456"
 }
 ```
-⚙️ Environment Variables
+## ⚙️ Environment Variables
 Create a .env file in the root directory:
 env
 ```
 MONGO_DB_CONNECTION_URI=mongodb://127.0.0.1:27017/Expense-App
 ```
-▶️ How to Run the Project  
+### ▶️ How to Run the Project  
 
-1️⃣ Clone the repository
+### 1️⃣ Clone the repository
 
 
 ```git clone https://github.com/USERNAME/REPO_NAME.git```  
 
-2️⃣ Navigate to backend folder
+### 2️⃣ Navigate to backend folder
 
 ```
 cd Expense-Server
 ```
-3️⃣ Install dependencies
+### 3️⃣ Install dependencies
 
 ```
 npm install
 ```
-4️⃣ Start the server
+### 4️⃣ Start the server
 
 ```
 npm start
