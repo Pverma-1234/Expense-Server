@@ -117,30 +117,31 @@ arduino
 ```
 http://localhost:5001
 ```
-🧠 Learning Outcomes
-Understanding MERN project structure
+## 🧠 Learning Outcomes
 
-Implementing authentication logic
+- Understanding **MERN project structure**
+- Implementing **authentication logic**
+- Handling **errors & validations**
+- Working with **MongoDB & Mongoose**
+- Writing **clean and reusable backend code**
 
-Handling errors & validations
+---
 
-Working with MongoDB & Mongoose
+## 🔮 Future Enhancements
 
-Writing clean and reusable backend code
+- ➕ Add expense CRUD operations
+- 📊 Expense analytics & charts
+- 🔐 JWT-based authentication
+- 🎨 Frontend with React
+- 📱 Responsive UI
 
-🔮 Future Enhancements
-➕ Add expense CRUD operations
+---
 
-📊 Expense analytics & charts
+## 👨‍💻 Author
 
-🔐 JWT-based authentication
+**Prince Verma**  
+📌 Learning MERN Stack through real-world projects  
 
-🎨 Frontend with React
+---
 
-📱 Responsive UI
-
-👨‍💻 Author
-Prince Verma
-📌 Learning MERN Stack through real-world projects
-
-⭐ If you like this project, don’t forget to star the repository!
+⭐ If you like this project, don’t forget to **star the repository**!
