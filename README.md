@@ -74,15 +74,16 @@ Expense-App
   "email": "john@gmail.com",
   "password": "123456"
 }
+```
 ▶ Login User
 POST /auth/login
 
-json
-Copy code
+```
 {
   "email": "john@gmail.com",
   "password": "123456"
 }
+```
 ⚙️ Environment Variables
 Create a .env file in the root directory:
 
