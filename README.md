@@ -112,12 +112,8 @@ npm install
 ```
 npm start
 ```
-Server will run on:
 
-arduino
-```
-http://localhost:5001
-```
+Server will run on:```http://localhost:5001```
 
 ## 🧠 Learning Outcomes
 
