@@ -88,34 +88,35 @@ POST /auth/login
 Create a .env file in the root directory:
 
 env
-Copy code
+```
 MONGO_DB_CONNECTION_URI=mongodb://127.0.0.1:27017/Expense-App
+```
 ▶️ How to Run the Project
 1️⃣ Clone the repository
 
-bash
-Copy code
-git clone https://github.com/USERNAME/REPO_NAME.git
+
+git clone ```https://github.com/USERNAME/REPO_NAME.git```
 2️⃣ Navigate to backend folder
 
-bash
-Copy code
+```
 cd Expense-Server
+```
 3️⃣ Install dependencies
 
-bash
-Copy code
+```
 npm install
+```
 4️⃣ Start the server
 
-bash
-Copy code
+```
 npm start
+```
 Server will run on:
 
 arduino
-Copy code
+```
 http://localhost:5001
+```
 🧠 Learning Outcomes
 Understanding MERN project structure
 
