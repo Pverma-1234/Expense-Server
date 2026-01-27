@@ -4,7 +4,7 @@ const groupDao = {
         const newGroup = new Group(data);
         return await newGroup.save();
     },
-    updateGroup: async (data) => {
+    updateGroup: async (groupId,data) => {
         const {name, description, thumbnail, adminEmail, paymentStatus} = data;
         return await Group.findByIdAndUpdate(groupId, {
             name,description,thumbnail,adminEmail,paymentStatus,
@@ -18,7 +18,17 @@ const groupDao = {
         },{new: true});
     },
 
-    removeMembers: async (...membersEmail) => {
+    removeMembers: async (groupId, ...membersEmail) => {
+        return await Group.findByIdAndUpdate(
+            groupId,
+            {
+                $pull: {
+                    membersEmail: { $in: membersEmail }
+                }
+            },
+            { new: true }
+        );
+
         
 
     },  
@@ -27,8 +37,18 @@ const groupDao = {
 
     },
     getGroupByStatus: async (status) => {
+        return await Group.find({ status });
 
     },
+
+    getAuditLog: async (groupId) => {
+        const group = await Group.findById(groupId).select('createdAt updatedAt');
+        return {
+            createdAt: group.createdAt,
+            lastUpdatedAt: group.updatedAt
+        };
+    }
+};
 
     /**
      *We'll only return when was the last time group
@@ -37,6 +57,6 @@ const groupDao = {
      * @param {*} group
      */
 
-};
+
 
 module.exports = groupDao;
