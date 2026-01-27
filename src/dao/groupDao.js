@@ -4,7 +4,11 @@ const groupDao = {
         const newGroup = new Group(data);
         return await newGroup.save();
     },
+<<<<<<< HEAD
     updateGroup: async (groupId,data) => {
+=======
+    updateGroup: async (data) => {
+>>>>>>> 0edac7fcac93e712791cc2e891396da2c45d9bb9
         const {name, description, thumbnail, adminEmail, paymentStatus} = data;
         return await Group.findByIdAndUpdate(groupId, {
             name,description,thumbnail,adminEmail,paymentStatus,
@@ -18,6 +22,7 @@ const groupDao = {
         },{new: true});
     },
 
+<<<<<<< HEAD
     removeMembers: async (groupId, ...membersEmail) => {
         return await Group.findByIdAndUpdate(
             groupId,
@@ -29,6 +34,9 @@ const groupDao = {
             { new: true }
         );
 
+=======
+    removeMembers: async (...membersEmail) => {
+>>>>>>> 0edac7fcac93e712791cc2e891396da2c45d9bb9
         
 
     },  
@@ -37,6 +45,7 @@ const groupDao = {
 
     },
     getGroupByStatus: async (status) => {
+<<<<<<< HEAD
         return await Group.find({ status });
 
     },
@@ -50,6 +59,11 @@ const groupDao = {
     }
 };
 
+=======
+
+    },
+
+>>>>>>> 0edac7fcac93e712791cc2e891396da2c45d9bb9
     /**
      *We'll only return when was the last time group
      * was settled to begin with,
@@ -57,6 +71,10 @@ const groupDao = {
      * @param {*} group
      */
 
+<<<<<<< HEAD
 
+=======
+};
+>>>>>>> 0edac7fcac93e712791cc2e891396da2c45d9bb9
 
 module.exports = groupDao;

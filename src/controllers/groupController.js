@@ -3,6 +3,7 @@ const groupDao = require('../dao/groupDao');
 const groupController = {
     createGroup: async (req, res) => {
         try{
+<<<<<<< HEAD
             const user = req.user;
             const {
                 name, description,
@@ -10,12 +11,24 @@ const groupController = {
             } = req.body;
 
             let allMembers = [user.email];
+=======
+            const {
+                name, description, adminEmail,
+                membersEmail,thumbnail,
+            } = req.body;
+
+            let allMembers = [adminEmail];
+>>>>>>> 0edac7fcac93e712791cc2e891396da2c45d9bb9
             if(membersEmail && Array.isArray(membersEmail)){
                 allMembers = [...new Set([...allMembers,...membersEmail])];
             }
 
             const newGroup = await groupDao.createGroup({
+<<<<<<< HEAD
                 name,description,adminEmail: user.email,allMembers,thumbnail,
+=======
+                name,description,adminEmail,allMembers,thumbnail,
+>>>>>>> 0edac7fcac93e712791cc2e891396da2c45d9bb9
                 PaymentAddress: {
                     amount: 0,
                     currency: 'INR',
@@ -35,6 +48,7 @@ const groupController = {
                 message: 'Internal Server Error'
             });
         }
+<<<<<<< HEAD
     },
     updateGroup: async (req, res) => {
         try {
@@ -110,6 +124,10 @@ const groupController = {
 
 
 
+=======
+    }
+
+>>>>>>> 0edac7fcac93e712791cc2e891396da2c45d9bb9
 };
 
 module.exports = groupController;
