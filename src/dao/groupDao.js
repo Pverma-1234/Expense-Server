@@ -1,80 +1,71 @@
-const Group = require('../model/group');
+const Group = require("../model/group");
+
 const groupDao = {
     createGroup: async (data) => {
         const newGroup = new Group(data);
         return await newGroup.save();
     },
-<<<<<<< HEAD
-    updateGroup: async (groupId,data) => {
-=======
+
     updateGroup: async (data) => {
->>>>>>> 0edac7fcac93e712791cc2e891396da2c45d9bb9
-        const {name, description, thumbnail, adminEmail, paymentStatus} = data;
+        const { groupId, name, description, thumbnail, adminEmail, paymentStatus } = data;
+
         return await Group.findByIdAndUpdate(groupId, {
-            name,description,thumbnail,adminEmail,paymentStatus,
-
-        },{new: true});
-    },
-    
-    addMembers: async (groupId,...membersEmails) => {
-        return await Group.findByIdAndUpdate(groupId,{
-            $addToSet: {membersEmail: {$each: membersEmails}}
-        },{new: true});
+            name, description, thumbnail, adminEmail, paymentStatus,
+        }, { new: true });
     },
 
-<<<<<<< HEAD
-    removeMembers: async (groupId, ...membersEmail) => {
-        return await Group.findByIdAndUpdate(
-            groupId,
-            {
-                $pull: {
-                    membersEmail: { $in: membersEmail }
-                }
-            },
-            { new: true }
-        );
+    addMembers: async (groupId, ...membersEmails) => {
+        return await Group.findByIdAndUpdate(groupId, {
+            $addToSet: { membersEmail: { $each: membersEmails }}
+        }, { new: true });
+    },
 
-=======
-    removeMembers: async (...membersEmail) => {
->>>>>>> 0edac7fcac93e712791cc2e891396da2c45d9bb9
-        
+    removeMembers: async (groupId, ...membersEmails) => {
+        return await Group.findByIdAndUpdate(groupId, {
+            $pull: { membersEmail: { $in: membersEmails } }
+        }, { new: true });
+    },
 
-    },  
     getGroupByEmail: async (email) => {
-        return await Group.find({membersEmail: email});
-
+        return await Group.find({ membersEmail: email });
     },
+
     getGroupByStatus: async (status) => {
-<<<<<<< HEAD
-        return await Group.find({ status });
-
+        // Take email as the input, then filter groups by email
+        // Check in membersEmail field.
+        return await Group.find({ "paymentStatus.isPaid": status });
     },
 
-    getAuditLog: async (groupId) => {
-        const group = await Group.findById(groupId).select('createdAt updatedAt');
-        return {
-            createdAt: group.createdAt,
-            lastUpdatedAt: group.updatedAt
-        };
-    }
-};
-
-=======
-
-    },
-
->>>>>>> 0edac7fcac93e712791cc2e891396da2c45d9bb9
     /**
-     *We'll only return when was the last time group
-     * was settled to begin with,
+     * We'll only return when was the last time group
+     * was settled to begin with.
      * In future, we can move this to separate entity!
-     * @param {*} group
+     * @param {*} groupId 
      */
+    getAuditLog: async (groupId) => {
+        // Based on your schema, the most relevant "settled" info 
+        // is the date within paymentStatus.
+        const group = await Group.findById(groupId).select('paymentStatus.date');
+        return group ? group.paymentStatus.date : null;
+    },
 
-<<<<<<< HEAD
+    getGroupsPaginated: async (email, limit, skip, sortOptions = {createdAt: -1})=>{
+        const [groups,totalCount] = await Promise.all([
+            // find groups with given email,
+            // sort them to preserve order across
+            // pagination requests, and then perform
+            // skip and limit to get results of desired page.
+            Group.find({ membersEmail: email })
+                .sort(sortOptions)
+                .skip(skip)
+                .limit(limit),
+            // count how many records are there in the collection
+            // with the given email
+            Group.countDocuments({ membersEmail: email }),
+        ]);
 
-=======
+        return {groups, totalCount};
+    },
 };
->>>>>>> 0edac7fcac93e712791cc2e891396da2c45d9bb9
 
 module.exports = groupDao;
