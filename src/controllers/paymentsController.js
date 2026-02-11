@@ -117,6 +117,9 @@ const paymentsController = {
                 plan_id: plan.id,
                 customer_notify: 1,
                 total_count: plan.totalBillingCycleCount,
+                // custom field provide by razorpay to store key-value pairs.
+                // in this case, it will help us map the razorpay subscription event
+                // to a specific user in our database
                 notes:{
                     userId: request.user._id
                 }
@@ -129,10 +132,116 @@ const paymentsController = {
             return response.status(500).json({message: "Internal server error"});
         }
     },
+    captureSubscription: async (request,response)=>{
+        try{
+            const {subscriptionId} = request.body;
+
+            const subscription = await razorpayClient.subscriptions.fetch(subscriptionId);
+            const user = await Users.findById({_id: request.user._id});
+
+            // This object will help us know on the UI wheather its ok for user to initiate
+            // another subscription or one is already in progess. We don't want user to
+            // initiate multiple subscriptions at a time
+            user.subscription = {
+                subscriptionId: subscriptionId,
+                planId: subscription.plan_id,
+                status: subscription.status
+            };
+            await user.save();
+            response.json({user: user});
+
+        } catch(error) {
+            console.log(error);
+            return response.status(500).json({message: 'Internal server error'});
+        }
+    },
     handleWebhookEvents: async (request,response) => {
         try{
+            console.log("Received Event");
+            const signature =request.header['x-razorpay-signature'];
+            const body=request.body;
 
-        } catch 
+            const expectedSignature = crypto
+                .createHmac('sha256',process.env.RAZORPAY_WEBHOOK_SECRET)
+                .update(body)
+                .digest(hex);
+
+            if(expectedSignature !== signature) {
+                return response.status(400).send('Invalid signature');
+            }
+
+            const payload = JSON.parse(body);
+            console.log(JSON.stringify(payload,null,2));
+
+            const event = payload.event;
+            const subscriptionData = payload.paylad.subscription.entry;
+            const razorpaySubscriptionId = subscriptionData.id;
+            const userId = subscriptionData.notes?.userId;
+
+            if(!userId){
+                console.log("UserId not found in the notes");
+                return response.status(400).send("UserId not found in the notes");
+            }
+
+            let newStatus;
+            switch(event){
+                case 'subscription.activated':
+                    newStatus = 'active';
+                    break;
+
+                case 'subscription.pending':
+                    newStatus = 'pending';
+                    break;
+                
+                case 'subscription.cancelled':
+                    newStatus = 'cancelled';
+                    break;
+
+                case 'subscription.completed':
+                    newStatus = 'completed';
+                    break;
+                
+                default:
+                    console.log(`Unhandled event received: ${event}`);
+                    return response.status(200).send(`Unhandled event received: ${event}`);
+
+            }
+            await Users.findByIdAndUpdate(
+                {_id:userId},
+                {
+                    $set: {
+                        'subscription.subscriptionId' : razorpaySubscriptionId,
+                        'subscription.status': newStatus,
+                        'subscription.planId': subscriptionData.plan_id,
+                        'subscription.start':subscriptionData.start_at
+                            ? new Date(subscriptionData.start_at * 1000)
+                            : null,
+                        'subscription.end': subscriptionData.end_at
+                            ? new Date(subscription.end_at)
+                            : null,
+                        'subscription.nextBillDate':subscriptionData.current_end
+                            ? new Date(subscriptionData.current_end * 1000)
+                            : null,
+                        'subscription.paymentsMade': subscriptionData.paid_count,
+                        'subscription.paymentsRemaining': subscriptionData.remaining_count,
+
+
+                    }
+                },
+                {new: true}
+            );
+            if(!user){
+                console.log("No user with provided userId exist");
+                return response.status(400).send("No user with provided userId exist");
+            }
+            console.log(`Updated subscription status for the user ${user.email} to ${newStatus}`);
+            return response.status(200).sned(`Event processed for user: ${user.email} with userId: ${userId}`);
+
+
+        } catch (error) {
+            console.log(error);
+            return response.status(500).json({message:"Internal server error" });
+        }
     }
 };
 

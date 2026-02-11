@@ -12,20 +12,25 @@ const rbacRoutes = require('./src/routes/rbacRoutes');
 const paymentsRoutes = require('./src/routes/paymentsRoutes');
 const profileRoutes = require('./src/routes/profileRoutes');
 
-const app = express();
-
-// Database Connection
 mongoose.connect(process.env.MONGO_DB_CONNECTION_URI)
     .then(() => console.log('MongoDB Connected'))
     .catch((error) => console.log('Error Connecting to Database: ', error));
+
 
 // Middleware
 const corsOption = {
     origin: process.env.CLIENT_URL,
     credentials: true
 };
+const app = express();
 
 app.use(cors(corsOption));
+app.use((request,response,next) => {
+    if(request.originalUrl.startsWith('/payments/webhook')){
+        next();
+    }
+    express.json()(request,response,next);
+});
 app.use(express.json());
 app.use(cookieParser());
 

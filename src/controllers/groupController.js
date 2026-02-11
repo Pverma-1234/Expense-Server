@@ -43,7 +43,7 @@ const groupController = {
             });
 
             userInfo.credits -=1;
-            userInfo.save();
+            await userInfo.save();
 
             response.status(201).json({
                 message: 'Group created successfully',
