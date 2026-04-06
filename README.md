@@ -86,14 +86,14 @@ Expense-App
 Create a .env file in the root directory:
 env
 ```
-MONGO_DB_CONNECTION_URI=mongodb://127.0.0.1:27017/Expense-App
+MONGO_DB_CONNECTION_URI=
 ```
 ### ▶️ How to Run the Project  
 
 ### 1️⃣ Clone the repository
 
 
-```git clone https://github.com/USERNAME/REPO_NAME.git```  
+```git clone https://github.com/Pverma-1234/Expense-Server.git```  
 
 ### 2️⃣ Navigate to backend folder
 
