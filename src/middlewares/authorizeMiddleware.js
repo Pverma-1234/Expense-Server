@@ -3,6 +3,7 @@ const permission = require('../utility/permission');
 const authorizeMiddleware = (requiredPermission) => {
     return (req, res, next) => {
         try {
+            console.log('authorizeMiddleware: requiredPermission', requiredPermission, 'user', req.user);
             const user = req.user;
 
             if (!user) {
@@ -10,6 +11,7 @@ const authorizeMiddleware = (requiredPermission) => {
             }
 
             const userPermissions = permission[user.role] || [];
+            console.log('authorizeMiddleware: role', user.role, 'permissions', userPermissions);
 
             if (!userPermissions.includes(requiredPermission)) {
                 return res.status(403).json({
@@ -20,7 +22,7 @@ const authorizeMiddleware = (requiredPermission) => {
             next();
         } catch (error) {
             console.log(error);
-            res.status(500).json({ message: "Internal server error" });
+            res.status(500).json({ message: "Internal server error", error: error.message });
         }
     };
 };

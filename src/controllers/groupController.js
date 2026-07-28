@@ -42,8 +42,10 @@ const groupController = {
                 }
             });
 
-            userInfo.credits -=1;
-            await userInfo.save();
+            userInfo.credits -= 1;
+            if (typeof userInfo.save === 'function') {
+                await userInfo.save();
+            }
 
             response.status(201).json({
                 message: 'Group created successfully',
@@ -114,7 +116,8 @@ const groupController = {
             // const groups = await groupDao.getGroupByEmail(email);
             // response.status(200).json(groups);
         } catch (error) {
-            response.status(500).json({ message: "Error fetching groups" });
+            console.error('getGroupsByUser failed', error);
+            response.status(500).json({ message: "Error fetching groups", error: error.message });
         }
     },
 
