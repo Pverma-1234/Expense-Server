@@ -26,7 +26,6 @@ const authController = {
                 });
             }
 
-            // optional chaining added
             const isPasswordMatched = await bcrypt.compare(password, user?.password);
 
             if (!isPasswordMatched) {
@@ -35,7 +34,6 @@ const authController = {
                 });
             }
 
-            // role and adminId handling (same logic as screenshot)
             user.role = user.role ? user.role : ADMIN_ROLE;
             user.adminId = user.adminId ? user.adminId : user._id;
 
@@ -49,7 +47,6 @@ const token = jwt.sign({
                 adminId: user.adminId
             }, jwtSecret, { expiresIn: '1h' });
 
-            // FIXED COOKIE
             response.cookie('jwtToken', token, {
                 httpOnly: true,
                 secure: false,
@@ -70,7 +67,6 @@ const token = jwt.sign({
         }
     },
 
-    // REGISTER
     register: async (request, response) => {
         try {
             const { name, email, password } = request.body;
@@ -111,7 +107,6 @@ const token = jwt.sign({
         }
     },
 
-    // CHECK LOGIN STATUS
     isUserLoggedIn: async (request, response) => {
         try {
             const token = request.cookies?.jwtToken;
@@ -158,7 +153,6 @@ const token = jwt.sign({
         }
     },
 
-    // GOOGLE SSO LOGIN
     googleSso: async (request, response) => {
         try {
             const { idToken } = request.body;

@@ -1,5 +1,9 @@
+
+const mongoose = require('mongoose');
 const groupDao = require("../dao/groupDao");
 const userDao = require("../dao/userDao");
+const expenseDao = require("../dao/expenseDao");
+const settlementDao = require("../dao/settlementDao");
 const groupController = {
 
     create: async (request, response) => {
@@ -68,6 +72,61 @@ const groupController = {
             response.status(500).json({ message: "Error updating group" });
         }
     },
+    deleteGroup: async (request, response) => {
+    try {
+        const { groupId } = request.params;
+
+        if (!mongoose.Types.ObjectId.isValid(groupId)) {
+            return response.status(400).json({
+                message: 'Invalid group ID'
+            });
+        }
+
+        const group = await groupDao.getGroupById(groupId);
+
+        if (!group) {
+            return response.status(404).json({
+                message: 'Group not found'
+            });
+        }
+
+        const loggedInEmail = String(
+            request.user?.email || ''
+        ).trim().toLowerCase();
+
+        const adminEmail = String(
+            group.adminEmail || ''
+        ).trim().toLowerCase();
+
+        if (loggedInEmail !== adminEmail) {
+            return response.status(403).json({
+                message: 'Only the group admin can delete this group'
+            });
+        }
+        await expenseDao.deleteExpensesByGroupId(groupId);
+
+        await settlementDao.deleteSettlementsByGroupId(groupId);
+        const deletedGroup =
+            await groupDao.deleteGroup(groupId);
+
+        if (!deletedGroup) {
+            return response.status(404).json({
+                message: 'Group not found'
+            });
+        }
+
+        return response.status(200).json({
+            message: 'Group deleted successfully'
+        });
+
+    } catch (error) {
+        console.error('deleteGroup failed:', error);
+
+        return response.status(500).json({
+            message: 'Error deleting group'
+        });
+    }
+},
 
     addMembers: async (request, response) => {
         try {
@@ -113,8 +172,7 @@ const groupController = {
             });
         
 
-            // const groups = await groupDao.getGroupByEmail(email);
-            // response.status(200).json(groups);
+        
         } catch (error) {
             console.error('getGroupsByUser failed', error);
             response.status(500).json({ message: "Error fetching groups", error: error.message });

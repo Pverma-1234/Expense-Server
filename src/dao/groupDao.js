@@ -40,6 +40,23 @@ const inMemoryGroupDao = {
         inMemoryGroups[index] = updatedGroup;
         return updatedGroup;
     },
+    deleteGroup: (groupId) => {
+    const index = inMemoryGroups.findIndex(
+        (group) =>
+            group._id.toString() ===
+            (groupId || '').toString()
+    );
+
+    if (index === -1) {
+        return null;
+    }
+
+    const deletedGroup = inMemoryGroups[index];
+
+    inMemoryGroups.splice(index, 1);
+
+    return deletedGroup;
+},
 
     addMembers: (groupId, membersEmails) => {
         const index = inMemoryGroups.findIndex((group) => group._id.toString() === (groupId || '').toString());
@@ -75,6 +92,15 @@ const inMemoryGroupDao = {
     getGroupByEmail: (email) => {
         return inMemoryGroups.filter((group) => (group.membersEmail || []).includes(email));
     },
+    getGroupById: (groupId) => {
+    return (
+        inMemoryGroups.find(
+            (group) =>
+                group._id.toString() ===
+                (groupId || '').toString()
+        ) || null
+    );
+},
 
     getGroupByStatus: (status) => {
         return inMemoryGroups.filter((group) => group.paymentStatus?.isPaid === status);
@@ -136,6 +162,22 @@ const groupDao = {
             return inMemoryGroupDao.updateGroup(data);
         }
     },
+    deleteGroup: async (groupId) => {
+    if (!isDbReady()) {
+        return inMemoryGroupDao.deleteGroup(groupId);
+    }
+
+    try {
+        return await Group.findByIdAndDelete(groupId);
+    } catch (error) {
+        console.warn(
+            'Falling back to in-memory deleteGroup:',
+            error.message
+        );
+
+        return inMemoryGroupDao.deleteGroup(groupId);
+    }
+},
 
     addMembers: async (groupId, ...membersEmails) => {
         if (!isDbReady()) {
@@ -176,6 +218,26 @@ const groupDao = {
             return inMemoryGroupDao.getGroupByEmail(email);
         }
     },
+    getGroupById: async (groupId) => {
+
+    if (!isDbReady()) {
+        return inMemoryGroupDao.getGroupById(groupId);
+    }
+
+    try {
+
+        return await Group.findById(groupId);
+
+    } catch (error) {
+
+        console.warn(
+            'Falling back to in-memory getGroupById:',
+            error.message
+        );
+
+        return inMemoryGroupDao.getGroupById(groupId);
+    }
+},
 
     getGroupByStatus: async (status) => {
         if (!isDbReady()) {

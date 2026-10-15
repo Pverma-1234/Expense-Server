@@ -13,7 +13,11 @@ const rbacDao = {
     },
 
     findByEmail: async (email) => {
-        return await User.findOne({ email });
+        return await User.findOne({ email: (email || '').toLowerCase() });
+    },
+
+    findById: async (userId) => {
+        return await User.findById(userId).select('-password');
     },
 
     update: async (userId, name, role) => {
