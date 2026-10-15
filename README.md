@@ -3,6 +3,8 @@
 An **Expense Management Application** built while learning the **MERN Stack**.  
 This project helps users **register, login, and manage expenses** efficiently while practicing real-world backend and frontend concepts.
 
+🌐 Live Application: https://expense-react-client-two.vercel.app/
+
 ---
 
 ## 🚀 Features
