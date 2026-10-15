@@ -44,54 +44,85 @@ mongoose
 
 
 
+// const allowedOrigins = [
+//     'http://localhost:5173',
+//     'http://localhost:5174',
+//     'http://localhost:5175',
+//     'http://127.0.0.1:5173',
+//     'http://127.0.0.1:5174',
+//     'http://127.0.0.1:5175'
+// ];
+
+// if (process.env.CLIENT_URL) {
+//     allowedOrigins.push(process.env.CLIENT_URL);
+// }
+
+// const corsOptions = {
+
+//     origin: (origin, callback) => {
+
+        
+//         if (!origin) {
+//             return callback(null, true);
+//         }
+
+//         if (allowedOrigins.includes(origin)) {
+//             return callback(null, true);
+//         }
+
+//         return callback(
+//             new Error(`CORS: Origin ${origin} is not allowed`)
+//         );
+//     },
+
+//     credentials: true,
+
+//     methods: [
+//         'GET',
+//         'POST',
+//         'PUT',
+//         'PATCH',
+//         'DELETE',
+//         'OPTIONS'
+//     ],
+
+//     allowedHeaders: [
+//         'Content-Type',
+//         'Authorization'
+//     ]
+// };
+
+
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:5174',
     'http://localhost:5175',
     'http://127.0.0.1:5173',
     'http://127.0.0.1:5174',
-    'http://127.0.0.1:5175'
+    'http://127.0.0.1:5175',
+    'https://expense-react-client-two.vercel.app',
+    'https://expense-react-client-ivn9vcffc.vercel.app'
 ];
 
 if (process.env.CLIENT_URL) {
-    allowedOrigins.push(process.env.CLIENT_URL);
+    allowedOrigins.push(process.env.CLIENT_URL.replace(/\/$/, ''));
 }
 
 const corsOptions = {
-
     origin: (origin, callback) => {
-
-        
-        if (!origin) {
+        if (!origin || allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
 
-        if (allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        }
-
-        return callback(
-            new Error(`CORS: Origin ${origin} is not allowed`)
-        );
+        console.error('CORS blocked origin:', origin);
+        return callback(new Error(`CORS: Origin ${origin} is not allowed`));
     },
-
     credentials: true,
-
-    methods: [
-        'GET',
-        'POST',
-        'PUT',
-        'PATCH',
-        'DELETE',
-        'OPTIONS'
-    ],
-
-    allowedHeaders: [
-        'Content-Type',
-        'Authorization'
-    ]
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 };
 
+// app.use(cors(corsOptions));
 
 // Apply CORS
 app.use(cors(corsOptions));
